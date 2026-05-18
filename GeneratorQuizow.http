@@ -1,0 +1,6 @@
+@GeneratorQuizow_HostAddress = http://localhost:5239
+
+GET {{GeneratorQuizow_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
