@@ -100,5 +100,30 @@ namespace GeneratorQuizow.Controllers
                 return StatusCode(500, new { Error = $"Wystąpił błąd: {ex.Message}" });
             }
         }
+
+        [HttpGet("download")]
+        public IActionResult DownloadEncryptedQuiz([FromQuery] string? fileName)
+        {
+            try
+            {
+                if (string.IsNullOrWhiteSpace(fileName))
+                    throw new ArgumentException("Nie podano ścieżki do pliku", nameof(fileName));
+
+                if (!quizService.QuizExists(fileName))
+                    return NotFound(new { Error = "Quiz nie istnieje." });
+
+                var encryptedBytes = quizService.GetEncryptedQuizBytes(fileName);
+        
+                return File(encryptedBytes, "application/octet-stream", fileName);
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(new { Error = ex.Message });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { Error = $"Wystąpił błąd: {ex.Message}" });
+            }
+        }
     }
 }

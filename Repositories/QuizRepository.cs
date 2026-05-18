@@ -11,6 +11,7 @@ namespace GeneratorQuizow.Repositories
         Quiz LoadDecrypted(string fileName);
         bool Exists(string fileName);
         void Delete(string fileName);
+        byte[] GetRawEncryptedBytes(string fileName);
     }
 
     public class QuizRepository : IQuizRepository
@@ -79,5 +80,13 @@ namespace GeneratorQuizow.Repositories
             using StreamReader srDecrypt = new StreamReader(csDecrypt);
             return srDecrypt.ReadToEnd();
         }
+        public byte[] GetRawEncryptedBytes(string fileName)
+        {
+            if (!Exists(fileName))
+                throw new FileNotFoundException();
+
+            return File.ReadAllBytes(fileName);
+        }
     }
+    
 }

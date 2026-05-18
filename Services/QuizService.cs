@@ -11,6 +11,7 @@ namespace GeneratorQuizow.Services
         Quiz GetQuiz(string fileName);
         bool QuizExists(string fileName);
         void DeleteQuiz(string fileName);
+        byte[] GetEncryptedQuizBytes(string fileName);
     }
 
     public class QuizService(IQuizRepository repository) : IQuizService
@@ -48,6 +49,11 @@ namespace GeneratorQuizow.Services
         public void DeleteQuiz(string fileName)
         {
             repository.Delete(fileName);
+        }
+
+        public byte[] GetEncryptedQuizBytes(string fileName)
+        {
+            return repository.GetRawEncryptedBytes(fileName);
         }
     }
 }
