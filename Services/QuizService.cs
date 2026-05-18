@@ -1,7 +1,7 @@
 using System;
 using System.Linq;
 using GeneratorQuizow.Models;
-using GeneratorQuizow.Data;
+using GeneratorQuizow.Repositories;
 
 namespace GeneratorQuizow.Services
 {
@@ -9,17 +9,12 @@ namespace GeneratorQuizow.Services
     {
         void ValidateAndSaveQuiz(Quiz quiz, string fileName);
         Quiz GetQuiz(string fileName);
+        bool QuizExists(string fileName);
+        void DeleteQuiz(string fileName);
     }
 
-    public class QuizService : IQuizService
+    public class QuizService(IQuizRepository repository) : IQuizService
     {
-        private readonly IQuizRepository _repository;
-
-        public QuizService(IQuizRepository repository)
-        {
-            _repository = repository;
-        }
-
         public void ValidateAndSaveQuiz(Quiz quiz, string fileName)
         {
             if (string.IsNullOrWhiteSpace(quiz.Title))
@@ -37,12 +32,22 @@ namespace GeneratorQuizow.Services
                     throw new ArgumentException($"Pytanie '{question.Text}' musi mieć przynajmniej jedną poprawną odpowiedź.");
             }
 
-            _repository.SaveEncrypted(quiz, fileName);
+            repository.SaveEncrypted(quiz, fileName);
         }
 
         public Quiz GetQuiz(string fileName)
         {
-            return _repository.LoadDecrypted(fileName);
+            return repository.LoadDecrypted(fileName);
+        }
+
+        public bool QuizExists(string fileName)
+        {
+            return repository.Exists(fileName);
+        }
+
+        public void DeleteQuiz(string fileName)
+        {
+            repository.Delete(fileName);
         }
     }
 }

@@ -1,4 +1,4 @@
-using GeneratorQuizow.Data;
+using GeneratorQuizow.Repositories;
 using GeneratorQuizow.Services;
 using Scalar.AspNetCore;
 
